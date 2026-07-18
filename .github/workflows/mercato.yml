@@ -1,0 +1,40 @@
+name: Mercato Watcher
+
+on:
+  workflow_dispatch: {}   # permet de lancer le script manuellement depuis l'onglet Actions
+  schedule:
+    # Lundi 9h00 UTC, uniquement de juin à septembre (mercato été)
+    - cron: "0 9 * 6-9 1"
+    # Lundi 9h00 UTC, uniquement en janvier et début février (mercato hiver)
+    - cron: "0 9 * 1,2 1"
+
+jobs:
+  check-transfers:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # nécessaire pour committer seen_transfers.json mis à jour
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run mercato watcher
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python main.py
+
+      - name: Commit updated state file
+        run: |
+          git config user.name "mercato-watcher-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add seen_transfers.json
+          git diff --staged --quiet || git commit -m "Mise à jour de l'état des transferts"
+          git push
