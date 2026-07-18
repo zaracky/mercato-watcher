@@ -1,38 +1,8 @@
-# Mercato Watcher — PSG (Real Madrid en pause)
-
+# Mercato Watcher — PSG
 Script qui vérifie une fois par semaine, uniquement pendant les périodes de
 mercato (été: juin-sept, hiver: janvier-début fév), les transferts
 **officiels** (pas les rumeurs) du PSG, et envoie une alerte Discord par
 transfert détecté.
-
-## Real Madrid mis en pause
-
-Le Real Madrid a été retiré du suivi pour l'instant. Sa page BeSoccer est
-protégée par un anti-bot (probablement Cloudflare) qui bloque aussi bien
-les requêtes HTTP classiques (`requests`, erreur 406) que Playwright
-(navigateur automatisé headless détecté comme tel, page vide renvoyée sans
-erreur). Le PSG, lui, n'a pas ce niveau de protection et fonctionne bien
-avec une simple requête HTTP.
-
-Pistes déjà explorées et écartées :
-- Site officiel psg.fr/realmadrid.com : fonctionne pour le Real (HTML
-  servi directement), mais psg.fr charge son contenu en JavaScript (pages
-  vides pour un scraper classique), et aucun des deux ne donne le montant
-  du transfert.
-- Foot Mercato (en complément) : autorisé par robots.txt mais sélecteurs
-  jamais stabilisés, abandonné au profit de BeSoccer.
-- API-Football (gratuite, 100 requêtes/jour) : couvre bien la saison en
-  cours, mais ne fournit aucun montant de transfert (seulement le type,
-  ex. "Free agent") -- ne répond pas au besoin.
-
-Pistes non testées si on veut reprendre ce chantier plus tard :
-- Un service de proxy résidentiel (payant) pour contourner le blocage IP
-- Une librairie de stealth Playwright plus poussée (masquage plus complet
-  des indices d'automatisation)
-- Une autre source spécialisée pas encore identifiée
-
-Pour réactiver le Real Madrid une fois une solution trouvée : décommenter
-son entrée dans `config.py` (`CLUBS`).
 
 ## Source de données (PSG)
 
@@ -79,7 +49,7 @@ mercato_watcher/
 pip install -r requirements.txt
 ```
 
-## Mise en place (à suivre pas à pas avec Claude)
+## Mise en place
 
 1. Créer un repo GitHub et y pousser ces fichiers.
 2. Créer un webhook Discord dans le salon souhaité (Paramètres du salon →
